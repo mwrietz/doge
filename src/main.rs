@@ -15,7 +15,6 @@ struct Game {
 }
 
 impl Game {
-
     fn one_round(&mut self) -> bool {
         let mut status = true;
         let mut rng = rand::thread_rng();
@@ -23,7 +22,7 @@ impl Game {
 
         self.wallet_previous = self.wallet;
         self.bet_previous = self.bet;
-        if roll > (1.0/self.odds) {
+        if roll > (1.0 / self.odds) {
             self.wallet -= self.bet;
             self.bet *= 1.5;
             status = false;
@@ -47,7 +46,7 @@ impl Game {
                 status = "lose".to_string();
             }
 
-            println!("i: {:4}  wallet: {:6.2}  bet: {:6.4}  status: {:6}  wallet: {:6.2}", i, self.wallet_previous, self.bet_previous, status, self.wallet);
+            self.display_oneround_results(i, status);
 
             // determine if game should stop
             if self.stop() {
@@ -83,8 +82,17 @@ impl Game {
         stop
     }
 
-    fn display_results(&self) {
-        println!("w: {:6.2}, b: {:6.4}", self.wallet, self.bet);
+    fn display_oneround_results(&self, i: u32, status: String) {
+        println!("i: {:4}  wallet: {:6.2}  bet: {:6.4}  status: {:6}  wallet: {:6.2}", i, self.wallet_previous, self.bet_previous, status, self.wallet);
+    }
+
+    fn display_multiround_results(&self) {
+        println!(
+            "wallet: {:8.2}, bank: {:8.2}, wallet+bank: {:8.2}",
+            self.wallet,
+            self.bank,
+            self.wallet + self.bank
+        );
     }
 }
 
@@ -97,16 +105,15 @@ fn main() {
         wallet_previous: 225.0,
         wallet: 225.0,
         bet_init: 225.0 / bet_factor,
-        bet_previous: 225.0 /bet_factor,
+        bet_previous: 225.0 / bet_factor,
         bet: 225.0 / bet_factor,
         odds: 3.0,
         stop_loss_factor: 0.8,
         stop_win_factor: 1.028,
         stop_status: 2,
     };
-
     for _i in 0..10 {
         game.multi_round(150);
-        println!("wallet: {:8.2}, bank: {:8.2}, wallet+bank: {:8.2}", game.wallet, game.bank, game.wallet+game.bank);
+        game.display_multiround_results();
     }
 }
