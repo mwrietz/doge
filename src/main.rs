@@ -83,7 +83,10 @@ impl Game {
     }
 
     fn display_oneround_results(&self, i: u32, status: String) {
-        println!("i: {:4}  wallet: {:6.2}  bet: {:6.4}  status: {:6}  wallet: {:6.2}", i, self.wallet_previous, self.bet_previous, status, self.wallet);
+        println!(
+            "i: {:4}  wallet: {:6.2}  bet: {:6.4}  status: {:6}  wallet: {:6.2}",
+            i, self.wallet_previous, self.bet_previous, status, self.wallet
+        );
     }
 
     fn display_multiround_results(&self) {
