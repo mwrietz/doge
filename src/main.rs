@@ -22,6 +22,13 @@ impl Game {
 
         self.wallet_previous = self.wallet;
         self.bet_previous = self.bet;
+
+        // determine if game should stop
+        if self.stop() {
+            println!("stop status: {}", self.stop_status);
+            return false;
+        }
+
         if roll > (1.0 / self.odds) {
             self.wallet -= self.bet;
             self.bet *= 1.5;
@@ -63,12 +70,14 @@ impl Game {
             stop = true;
             self.stop_status = 0;
             self.wallet = 0.0;
+            print!("wallet empty - ");
         }
 
         // stop loss
         if self.wallet < self.stop_loss_factor * self.wallet_init {
             stop = true;
             self.stop_status = 1;
+            print!("stop loss limit - ");
         }
 
         // stop win
@@ -77,6 +86,7 @@ impl Game {
             self.stop_status = 2;
             self.bank += self.wallet - self.wallet_init;
             self.wallet = self.wallet_init;
+            print!("stop win limit - ");
         }
 
         stop
